@@ -2,6 +2,8 @@ package chatroom
 
 import (
 	"container/list"
+	"fmt"
+	"strings"
 	"time"
 )
 
@@ -74,13 +76,44 @@ func chatroom() {
 			ch <- Subscription{events, subscriber}
 
 		case event := <-publish:
-			for ch := subscribers.Front(); ch != nil; ch = ch.Next() {
-				ch.Value.(chan Event) <- event
+
+			send := func(e Event) {
+				for ch := subscribers.Front(); ch != nil; ch = ch.Next() {
+					ch.Value.(chan Event) <- event
+				}
 			}
-			if archive.Len() >= archiveSize {
-				archive.Remove(archive.Front())
+			s := strings.SplitN(event.Text, " ", 3)
+			var begin time.Time
+			if s[0] == "/replay" {
+				if len(s) > 1 {
+					d, err := time.ParseDuration(s[1])
+					if err == nil {
+						begin = time.Now().Add(-1 * d)
+					}
+				}
+				logs, err := Retrieve(begin, time.Now())
+				if err != nil {
+					event.Text = fmt.Sprintf("failed to retrieve the log: %v", err)
+					send(event)
+				} else {
+					for _, l := range logs {
+						event.Text = fmt.Sprintf("%s", l)
+						send(event)
+					}
+				}
+			} else {
+				// TODO: event.Type (join/leave)
+				if event.Text != "" {
+					Log(time.Now(), event.User+":"+event.Text)
+				}
+				for ch := subscribers.Front(); ch != nil; ch = ch.Next() {
+					ch.Value.(chan Event) <- event
+				}
+				if archive.Len() >= archiveSize {
+					archive.Remove(archive.Front())
+				}
+				archive.PushBack(event)
 			}
-			archive.PushBack(event)
 
 		case unsub := <-unsubscribe:
 			for ch := subscribers.Front(); ch != nil; ch = ch.Next() {

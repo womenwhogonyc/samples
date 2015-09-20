@@ -45,6 +45,7 @@ func Retrieve(begin, end time.Time) ([]string, error) {
 		max := []byte(end.Format(time.RFC3339))
 		for k, v := c.Seek(min); k != nil && bytes.Compare(k, max) <= 0; k, v = c.Next() {
 			// TODO: k? (timestamp)
+			log.Printf("appending %s: %s", k, v)
 			res = append(res, fmt.Sprintf("%s: %s", k, v))
 		}
 		return nil
@@ -53,5 +54,6 @@ func Retrieve(begin, end time.Time) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
+	log.Print("returning data: ", res)
 	return res, nil
 }
