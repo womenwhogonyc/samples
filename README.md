@@ -11,3 +11,6 @@ Visit http://revel.github.io for more info
 
 ## Contribute
 If you got a good example application then please make a pull request ;-)
+
+#Deploy to the cloud:
+https://github.com/womenwhogonyc/samples/blob/master/cloud.md
