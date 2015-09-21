@@ -9,12 +9,12 @@ Create a droplet: 1GB Ubuntu 15.04 x64. Tick User Data and enter the following c
 ``` 
 #cloud-config
 users:
-  - name: chat
-    ssh-authorized-keys:
-      - ssh-rsa //put your key here!
-    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+  - name: demo
     groups: sudo
     shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    ssh-authorized-keys:
+      - ssh-rsa insertyourkeyhere
 runcmd:
   - apt-get update && apt-get upgrade -y
   - sed -i -e '/^Port/s/^.*$/Port 4444/' /etc/ssh/sshd_config
