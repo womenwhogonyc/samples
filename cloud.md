@@ -21,7 +21,7 @@ runcmd:
   - sed -i -e '/^PermitRootLogin/s/^.*$/PermitRootLogin no/' /etc/ssh/sshd_config
   - sed -i -e '$aAllowUsers chat' /etc/ssh/sshd_config
   - restart ssh
-  - ufw allow 22, 80, 443
+  - ufw allow 22,80,443
   - ufw enable
   - apt-get install fail2ban -y
   - sed -i -e '/^maxretry =/s/^.*$/maxretry = 3/' /etc/fail2ban/jail.conf
