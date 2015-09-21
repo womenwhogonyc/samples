@@ -4,9 +4,7 @@ If you would like to ship the chat app to the cloud using a DigitalOcean droplet
 
 If you don't have a DigitalOcean account you can get $10 in credit by signing up with this link: do.co/tammyshark 
 
-Create a droplet, $10 Ubuntu 15.05 
-
-Use the following 
+Create a droplet: 1GB Ubuntu 15.04 x64. Tick User Data and enter the following cloud-config/metadata/user data script:
 
 ``` 
 #cloud-config
@@ -28,6 +26,7 @@ runcmd:
   - apt-get install fail2ban -y
   - sed -i -e '/^maxretry =/s/^.*$/maxretry = 3/' /etc/fail2ban/jail.conf
   - sed -i -e '$bantime  = 2419200' /etc/fail2ban/jail.conf
+  - service fail2ban restart
   
 ``` 
 
