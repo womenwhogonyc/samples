@@ -7,11 +7,13 @@ If you don't have a DigitalOcean account you can get $10 in credit by signing up
 Create a droplet, $10 Ubuntu 15.05 
 
 Use the following 
+
+``` 
 #cloud-config
 users:
   - name: chat
     ssh-authorized-keys:
-      - ssh-rsa [i]//put your key here![/i]
+      - ssh-rsa //put your key here!
     sudo: ['ALL=(ALL) NOPASSWD:ALL']
     groups: sudo
     shell: /bin/bash
@@ -26,5 +28,7 @@ runcmd:
   - apt-get install fail2ban -y
   - sed -i -e '/^maxretry =/s/^.*$/maxretry = 3/' /etc/fail2ban/jail.conf
   - sed -i -e '$bantime  = 2419200' /etc/fail2ban/jail.conf
+  
+``` 
 
 <3
