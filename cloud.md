@@ -12,16 +12,14 @@ users:
   - name: demo
     groups: sudo
     shell: /bin/bash
-    sudo: ['ALL=(ALL) NOPASSWD:ALL']
     ssh-authorized-keys:
       - ssh-rsa insertyourkeyhere
 runcmd:
   - apt-get update && apt-get upgrade -y
-  - sed -i -e '/^Port/s/^.*$/Port 4444/' /etc/ssh/sshd_config
   - sed -i -e '/^PermitRootLogin/s/^.*$/PermitRootLogin no/' /etc/ssh/sshd_config
   - sed -i -e '$aAllowUsers chat' /etc/ssh/sshd_config
   - restart ssh
-  - ufw allow 4444,80,443
+  - ufw allow 22,80,443
   - ufw enable
   - apt-get install fail2ban -y
   - sed -i -e '/^maxretry =/s/^.*$/maxretry = 3/' /etc/fail2ban/jail.conf
